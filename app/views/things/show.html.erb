@@ -1,0 +1,89 @@
+<p id="notice"><%= notice %></p>
+<div>
+  <h1 class="font-bold text-xl">
+    <%= @thing.name %>
+  </h1>
+  <p>
+    Before creating an instance of a <%= @thing.name %>, it will need some instances of it's properties. Set them down here.
+  </p>
+  <%= form_with model: @thing, url: create_thing_instance_path(@thing), method: :post do | f | %>
+    <div>
+      <% if @thing.properties %>
+        <% @thing.properties.each do | property | %>
+          <div class="h-40 border-2 p-3 col-span-1 mt-5">
+            <div class="border-b-2 font-bold">
+              <%= property.first.first %>
+            </div>
+            <div class=" overflow-y-auto h-28 ">
+            <% property.to_a.last.last.each do |sub_thing| %>
+              <div class="flex space-x-4">
+                <div class="py-4 font-bold text-md">
+                  <%= Thing.where(name: sub_thing).first.name %>
+                </div>
+                <% if Thing.where(name: sub_thing).first.instances%>
+                  <%= f.select property.first.first + "_" + sub_thing , Thing.where(name: sub_thing).first.instances.collect{|x| [x["instance_name"] ? x["instance_name"] : x["instance_id"], x["instance_id"]]}, {multiple: true}, {class: 'block px-0 w-52 text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer ml-4'}  %>
+                <% else %>
+                  <div class= "py-4">
+                    There are no instances of <%= sub_thing %> yet
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <div class=" bg-yellow-100 border border-yellow-300 p-3 my-3 ">
+          <%= @thing.name %> does not have any properties yet, set them here.
+        </div>
+      <% end %>
+      <%= f.label :instance_name, "Naam", class: "border-gray-300 rounded-md block mt-3" %>
+      <%= f.text_field :instance_name, class: "border-gray-300 rounded-md block mt-3" %>
+      <%= f.submit "Create a new #{@thing.name}",  class: "mt-2 hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+    <% end %>
+    </div>
+    <div class="flex ">
+      <%= link_to 'Edit', edit_thing_path(@thing), class: "mt-2 hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded visited:text-white"  %>
+      <%= link_to 'Back', things_path, class: "mt-2 hover:cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded visited:text-white"  %>
+    </div>
+
+    <div class="flex space-x-3 mt-5">
+      <% if @thing.instances %>
+        <% @thing.instances.each do |instance| %>
+          <% if instance["instance_id"].include?("House") %>
+            <div class="relative h-40 w-52 border-black border-2">
+              <%= instance["instance_id"] %>
+              <% if instance["Door"] %>
+                <div class="absolute h-20 w-10 border-l-2 border-r-2 border-t-2 border-black bottom-0 left-5">
+                
+                </div>
+              <% else %>
+                <div class="absolute h-20 w-10 bottom-0 left-5 bg-red-200">
+                  <%= instance["instance_id"] %> is missing Door
+                </div>
+              <% end %>
+              <% if instance["Window"] %>
+                <div class="absolute h-20 w-20 border-2 border-black bottom-12 right-5">
+                
+                </div>
+              <% else %>
+                <div class="absolute h-20 w-20 right-5 bg-red-200">
+                  <%= instance["instance_id"] %> is missing Window
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="border p-5">
+              <% instance.to_a.each do |i| %>
+              <div class="mb-2">
+                <span class="font-bold">
+                  <%= i[0] %><br>
+                </span>
+                <%= i[1] %><br>
+              </div>
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>

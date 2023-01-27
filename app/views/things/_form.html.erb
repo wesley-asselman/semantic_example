@@ -1,0 +1,44 @@
+<%= form_with(model: thing) do |form| %>
+  <% if thing.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(thing.errors.count, "error") %> prohibited this thing from being saved:</h2>
+      <ul>
+        <% thing.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mt-2">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="mt-2">
+    Koppelen
+    <div class="grid grid-cols-2">
+      <% i = 0 %>
+      <% Thing.properties.each do |property| %>
+        <div class="h-60 border-2 p-3 col-span-1 overflow-hidden">
+          <div class="border-b-2 font-bold">
+            <%= property[1] %>
+          </div>
+          <div class="overflow-y-auto h-52 p-4">
+            <% Thing.find_each do |sub_thing| %>
+              <div class="flex p-1">
+                <%= form.check_box property[0], { multiple: true, checked: thing.properties && thing.properties[i] && thing.properties[i][property[0]] && thing.properties[i][property[0]].include?(sub_thing.name) ? true : false }, sub_thing.name, false %>
+                <%= form.label property[0], sub_thing.name, class: "ml-2" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        <% i += 1 %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="actions mt-2">
+    <%= form.submit "submit", class: "cursor-pointer bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"%>
+  </div>
+<% end %>

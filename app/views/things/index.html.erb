@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Things</h1>
+
+<table class="table-auto">
+  <thead>
+    <tr>
+      <th class="border px-4 py-2">Naam</th>
+      <th class="border px-4 py-2">Properties</th>
+      <th class="border px-4 py-2">Instanties</th>
+      <th class="border px-4 py-2">Acties</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @things.each do |thing| %>
+      <tr>
+        <td class="border px-4 py-2"><%= thing.name %></td>
+        <td class="border px-4 py-2"><%= thing.properties %></td>
+        <td class="border px-4 py-2"><%= thing.instances %></td>
+        <td class="border px-4 py-2">
+          <%= link_to 'Show', thing %>
+          <%= link_to 'Edit', edit_thing_path(thing) %>
+          <%= link_to 'Destroy', thing, method: :delete, data: { confirm: 'Are you sure?' } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Thing', new_thing_path %>

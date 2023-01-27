@@ -1,0 +1,20 @@
+<div class="col-span-2 bg-yellow-100 p-5">
+  <h1 class="font-bold text-2xl text-center">
+    <%= link_to "Semantics", root_path %>
+  </h1>
+
+  <div class="mt-5 ml-3">
+    <div>
+      <h1 class="font-bold text-lg">
+        <%= link_to "Dingen", things_path %>
+      </h1>
+      <div class="ml-2">
+        <% Thing.all.find_each do |thing| %>
+          <div class="text-lg font-bolder">
+            <%= link_to thing.name, thing %>
+          </div>
+        <% end %> 
+      </div>
+    </div>
+  </div>
+</div>
