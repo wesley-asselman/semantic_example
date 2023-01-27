@@ -23,8 +23,22 @@ class ThingsController < ApplicationController
   def create
     @thing = Thing.new(
       name: params[:thing][:name],
-      properties: Thing.properties.map{|x| {x.first.to_sym => []}}
     )
+    object = []
+    Thing.properties.each do |property|
+      if params[:thing][property[0].to_sym]
+        # raise property[0].to_sym.inspect
+        object << {
+          property[0].to_sym => params[:thing][property[0].to_sym]
+        }
+      else
+        object << {
+          property[0].to_sym => []
+        }
+      end
+    end
+
+    @thing.properties = object
      
     respond_to do |format|
       if @thing.save

@@ -16,8 +16,32 @@
     <% @things.each do |thing| %>
       <tr>
         <td class="border px-4 py-2"><%= thing.name %></td>
-        <td class="border px-4 py-2"><%= thing.properties %></td>
-        <td class="border px-4 py-2"><%= thing.instances %></td>
+        <td class="border px-4 py-2">
+          <% thing.properties.to_a.each do |property|%>
+            <% property.each do |prop| %>
+              <div>
+                <b><%= prop[0] %></b>:
+                <% prop[1].each do |p| %> 
+                  <div class="ml-2" >
+                    <%= p %> <br>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+        </td>
+        <td class="border px-4 py-2">
+          <% thing.instances.to_a.each do |instance| %>
+            <div>
+              <b><%= instance["instance_id"] %></b>
+              <% instance.drop(1).each do |inst| %>
+                <div class="ml-2" >
+                  <%= inst[0] %>: <%= inst[1] %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </td>
         <td class="border px-4 py-2">
           <%= link_to 'Show', thing %>
           <%= link_to 'Edit', edit_thing_path(thing) %>
